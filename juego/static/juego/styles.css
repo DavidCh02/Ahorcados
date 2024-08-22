@@ -178,3 +178,24 @@ th {
     background-color: #4682b4;
     color: white;
 }
+.abecedario {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.letra {
+    padding: 10px 15px;  /* Aumentar el padding */
+    margin: 5px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1.2em;  /* Aumentar el tamaño de la fuente */
+    background-color: #f9f9f9;  /* Color de fondo más claro */
+}
+
+.letra:hover {
+    background-color: #e0e0e0;  /* Color de fondo al pasar el ratón */
+}

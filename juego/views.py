@@ -1,7 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
+
+from .forms import PalabraForm, JugadorForm
 from .models import Jugador, Palabra
-from .forms import JugadorForm, PalabraForm
 import random
+import string
+
 
 def inicio(request):
     if request.method == 'POST':
@@ -85,10 +88,14 @@ def jugar(request, jugador_id):
                 request.session['letras_adivinadas'] = letras_adivinadas
                 request.session['letras_incorrectas'] = letras_incorrectas
 
+                # Aquí se verifica si el jugador se quedó sin intentos
                 if intentos <= 0:
+                    palabra_oculta = request.session['palabra_actual']  # Obtener la palabra oculta
                     del request.session['palabra_actual']
                     return render(request, 'juego/fin_juego.html', {
                         'jugador': jugador,
+                        'puntuacion': jugador.puntuacion,  # Pasar la puntuación final
+                        'palabra_oculta': palabra_oculta,  # Pasar la palabra oculta
                         'puntuaciones': puntuaciones,
                     })
 
@@ -97,6 +104,7 @@ def jugar(request, jugador_id):
             request.session['pista_mostrada'] = True
 
     palabra_oculta = ''.join([letra if letra in letras_adivinadas else '_' for letra in palabra])
+    abecedario = list(string.ascii_uppercase)
 
     return render(request, 'juego/jugar.html', {
         'jugador': jugador,
@@ -109,9 +117,8 @@ def jugar(request, jugador_id):
         'pista_mostrada': pista_mostrada,
         'puntuaciones': puntuaciones,
         'mensaje_error': mensaje_error if 'mensaje_error' in locals() else '',
+        'abecedario': abecedario,  # Agregar abecedario al contexto
     })
-
-
 def tabla_puntuaciones(request):
     jugadores = Jugador.objects.order_by('-puntuacion')
     return render(request, 'juego/tabla_puntuaciones.html', {'jugadores': jugadores})
@@ -123,7 +130,7 @@ from .models import Jugador
 
 def fin_juego(request, jugador_id):
     # Obtén el jugador
-    jugador = Jugador.objects.get(id=jugador_id)
+    jugador = get_object_or_404(Jugador, id=jugador_id)
 
     # Asegúrate de que el modelo Jugador tiene un atributo para la puntuación
     puntuacion = jugador.puntuacion
