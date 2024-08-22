@@ -4,15 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'juego/styles.css' %}">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'juego/styles.css' %}">
     <title>Juego Terminado</title>
 </head>
 <body>
     <div class="container">
         <h2 class="titulo">Juego del Ahorcado - Fin del Juego</h2>
-
         <h1 class="jugador">Jugador: <span>{{ jugador.nombre }}</span></h1>
         <p class="puntuacion">Tu puntuación final: <strong>{{ puntuacion }}</strong></p>
         <p class="palabra">La palabra era: <strong>{{ palabra_oculta }}</strong></p>
