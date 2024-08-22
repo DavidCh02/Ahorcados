@@ -4,15 +4,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'juego/styles.css' %}">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'juego/styles.css' %}">
     <title>Juego de Ahorcados</title>
+    <style>
+        .espacio-letra {
+            display: inline-block;
+            width: 30px; /* Ajusta el tamaño del espacio para las letras */
+            height: 30px; /* Ajusta el tamaño del espacio para las letras */
+            border-bottom: 2px solid black; /* Línea para representar la letra */
+            margin: 0 5px; /* Espaciado entre los espacios */
+            text-align: center;
+            font-size: 24px; /* Tamaño de la letra */
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1 class="titulo">Juego del Ahorcado</h1>
         
+        <div class="ahorcado">
+            <canvas id="canvas" width="200" height="200"></canvas>
+        </div>
+
         <div class="juego">
             <form method="post">
                 {% csrf_token %}
@@ -46,7 +59,11 @@
         <div class="resultado">
             <h2 class="jugador">Jugador: {{ jugador.nombre }}</h2>
             <p class="puntuacion">Puntuación: {{ puntuacion }}</p>
-            <p class="palabra">Palabra: {{ palabra_oculta }}</p>
+            <p class="palabra">Palabra: 
+                {% for letra in palabra_oculta %}
+                    <span class="espacio-letra">{{ letra }}</span>
+                {% endfor %}
+            </p>
         </div>
 
         <h2 class="tabla-titulo">Tabla de Puntuaciones</h2>
@@ -63,5 +80,73 @@
             {% endfor %}
         </table>
     </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Dibuja el ahorcado según el número de intentos restantes
+        function dibujarAhorcado(intentos) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpia el canvas
+
+            ctx.lineWidth = 5; // Grosor de las líneas
+            ctx.strokeStyle = 'black'; // Color de las líneas
+
+            // Dibuja el soporte del ahorcado
+            ctx.beginPath();
+            ctx.moveTo(50, 150); // Base
+            ctx.lineTo(150, 150); // Poste horizontal
+            ctx.lineTo(150, 50); // Poste vertical
+            ctx.lineTo(100, 50); // Cruzado
+            ctx.lineTo(100, 100); // Límite
+            ctx.stroke();
+
+            // Dibuja partes del muñeco según los intentos restantes
+            if (intentos < 6) {
+                // Cabeza
+                ctx.beginPath();
+                ctx.arc(100, 40, 10, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            if (intentos < 5) {
+                // Cuerpo
+                ctx.beginPath();
+                ctx.moveTo(100, 50);
+                ctx.lineTo(100, 120);
+                ctx.stroke();
+            }
+            if (intentos < 4) {
+                // Brazo izquierdo
+                ctx.beginPath();
+                ctx.moveTo(100, 70);
+                ctx.lineTo(70, 90);
+                ctx.stroke();
+            }
+            if (intentos < 3) {
+                // Brazo derecho
+                ctx.beginPath();
+                ctx.moveTo(100, 70);
+                ctx.lineTo(130, 90);
+                ctx.stroke();
+            }
+            if (intentos < 2) {
+                // Pierna izquierda
+                ctx.beginPath();
+                ctx.moveTo(100, 120);
+                ctx.lineTo(70, 150);
+                ctx.stroke();
+            }
+            if (intentos < 1) {
+                // Pierna derecha
+                ctx.beginPath();
+                ctx.moveTo(100, 120);
+                ctx.lineTo(130, 150);
+                ctx.stroke();
+            }
+        }
+
+        // Llama a la función para dibujar el muñeco al cargar la página
+        dibujarAhorcado({{ intentos }});
+    </script>
 </body>
 </html>

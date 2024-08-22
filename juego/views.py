@@ -36,7 +36,7 @@ def jugar(request, jugador_id):
     global mensaje_error
     jugador = get_object_or_404(Jugador, id=jugador_id)
     palabras = list(Palabra.objects.all())
-    puntuaciones = Jugador.objects.all().order_by('-puntuacion')  # Obtener puntuaciones
+    puntuaciones = Jugador.objects.all().order_by('-puntuacion')
 
     # Almacena la palabra actual en la sesión
     if 'palabra_actual' not in request.session:
@@ -107,7 +107,7 @@ def jugar(request, jugador_id):
         'letras_incorrectas': letras_incorrectas,
         'puntuacion': jugador.puntuacion,
         'pista_mostrada': pista_mostrada,
-        'puntuaciones': puntuaciones,  # Agregar puntuaciones al contexto
+        'puntuaciones': puntuaciones,
         'mensaje_error': mensaje_error if 'mensaje_error' in locals() else '',
     })
 
