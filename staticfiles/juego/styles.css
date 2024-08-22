@@ -1,0 +1,180 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+}
+
+/* Estilos Generales */
+body {
+    background-color: #f0f8ff; /* Color de fondo suave */
+    color: #333; /* Color de texto */
+    font-family: 'Arial', sans-serif; /* Fuente */
+    margin: 0; /* Sin márgenes */
+    padding: 0; /* Sin padding */
+}
+
+.container {
+    max-width: 800px; /* Ancho máximo */
+    margin: 20px auto; /* Centrado */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 10px; /* Bordes redondeados */
+    background-color: #ffffff; /* Fondo blanco */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+    text-align: center; /* Centrado de texto */
+}
+
+.titulo {
+    color: #ff6347; /* Tomate */
+    font-size: 2.5em; /* Tamaño de fuente */
+    margin-bottom: 20px; /* Margen inferior */
+}
+
+.inicio {
+    margin: 20px 0; /* Margen */
+    padding: 15px; /* Espaciado interno */
+    border: 2px solid #4682b4; /* Borde */
+    border-radius: 10px; /* Bordes redondeados */
+    background-color: #e6f7ff; /* Color de fondo del inicio */
+}
+
+label {
+    font-size: 1.2em; /* Tamaño de fuente */
+}
+
+input[type="text"] {
+    padding: 10px; /* Espaciado interno */
+    font-size: 1em; /* Tamaño de fuente */
+    border: 2px solid #4682b4; /* Borde */
+    border-radius: 5px; /* Bordes redondeados */
+    margin-right: 10px; /* Margen derecho */
+}
+
+.formulario {
+    margin-bottom: 15px; /* Espacio entre el formulario y los botones */
+}
+
+.boton {
+    background-color: #4682b4; /* Color de fondo */
+    color: white; /* Color de texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    padding: 10px 15px; /* Espaciado interno */
+    font-size: 1em; /* Tamaño de fuente */
+    cursor: pointer; /* Cursor de puntero */
+    transition: background-color 0.3s; /* Transición suave */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-block; /* Para asegurarnos de que el botón tenga un ancho */
+    margin-top: 10px; /* Margen superior para los botones */
+}
+
+.boton:hover {
+    background-color: #5ba4e4; /* Un tono más claro */
+}
+
+.tabla-titulo {
+    color: #4682b4; /* Steel Blue */
+    font-size: 1.8em; /* Tamaño de fuente */
+    margin: 20px 0; /* Margen */
+}
+
+.tabla {
+    width: 100%; /* Ancho completo */
+    border-collapse: collapse; /* Colapsar bordes */
+    margin-top: 10px; /* Margen superior */
+}
+
+th, td {
+    border: 1px solid #ddd; /* Borde */
+    padding: 8px; /* Espaciado interno */
+    text-align: center; /* Centrado */
+}
+
+th {
+    background-color: #4682b4; /* Color de fondo del encabezado */
+    color: white; /* Color de texto del encabezado */
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+    .titulo {
+        font-size: 2em; /* Tamaño de fuente más pequeño */
+    }
+
+    .inicio {
+        font-size: 0.9em; /* Tamaño de fuente más pequeño */
+    }
+
+    .boton {
+        width: 90%; /* Botones más anchos */
+        font-size: 1em; /* Tamaño de fuente más pequeño */
+    }
+
+    input[type="text"] {
+        width: 70%; /* Ancho del campo de texto */
+    }
+}
+
+
+.juego .resultado {
+    margin: 20px 0;
+    padding: 10px;
+    border: 2px dashed #32cd32; /* Lime Green */
+    border-radius: 10px;
+    background-color: #f0fff0; /* Verde claro */
+}
+
+
+.jugador, .puntuacion, .palabra {
+    font-size: 2em; /* Tamaño de fuente */
+    margin: 10px 0;
+}
+
+.pista {
+    color: #ff8c00; /* Dark Orange */
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.letras-container {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 10px 0;
+}
+
+.letra-boton {
+    margin: 5px;
+    padding: 10px;
+    font-size: 1.2em; /* Tamaño de fuente */
+    cursor: pointer;
+    background-color: #4CAF50; /* Color de fondo */
+    color: white; /* Color de texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+}
+
+.letra-boton:hover {
+    background-color: #45a049; /* Color de fondo al pasar el mouse */
+}
+
+.tabla-titulo {
+    color: #32cd32; /* Lime Green */
+    font-size: 2em; /* Tamaño de fuente */
+    margin-top: 30px;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.tabla th, .tabla td {
+    border: 1px solid #4682b4;
+    padding: 12px; /* Espaciado interno */
+}
+
+.tabla th {
+    background-color: #4682b4;
+    color: white;
+}
