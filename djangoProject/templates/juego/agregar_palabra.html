@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'juego/styles.css' %}">
+    <title>Agregar Palabra - Juego de Ahorcados</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="titulo">Agregar Palabra</h1>
+        
+        <div class="agregar-palabra">
+            <h2>Introduce una nueva palabra y su pista</h2>
+            <form method="post">
+                {% csrf_token %}
+                <label for="palabra">Palabra:</label>
+                <input type="text" id="palabra" name="palabra" required>
+                
+                <label for="pista">Pista:</label>
+                <input type="text" id="pista" name="pista" required>
+                
+                <button type="submit" class="boton">Agregar Palabra</button>
+            </form>
+
+            <div class="mensaje">
+                {% if mensaje %}
+                    <p>{{ mensaje }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="volver">
+            <a href="{% url 'inicio' %}" class="boton">Volver al Inicio</a>
+        </div>
+    </div>
+</body>
+</html>

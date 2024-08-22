@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'juego/styles.css' %}">
+    <title>Juego de Ahorcados</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="titulo">Juego del Ahorcado</h1>
+        
+        <div class="juego">
+            <form method="post">
+                {% csrf_token %}
+                <label for="letra">Ingresa una letra:</label>
+                <input type="text" name="letra" maxlength="1" required class="input-letra">
+                <input type="hidden" name="letras_adivinadas" value="{{ letras_adivinadas }}">
+                <input type="hidden" name="intentos" value="{{ intentos }}">
+                <button type="submit" class="boton">Adivinar</button>
+            </form>
+            <p>Intentos restantes: <span class="intentos">{{ intentos }}</span></p>
+
+            {% if mensaje_error %}
+                <p class="error">{{ mensaje_error }}</p>
+            {% endif %}
+
+            {% if pista_mostrada %}
+                <p class="pista">Pista: {{ pista }}</p>
+            {% endif %}
+
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="usar_pista" value="1">
+                <button type="submit" class="boton">Usar Pista</button>
+            </form>
+
+            {% if letras_incorrectas %}
+                <p> Letras incorrectas: <span class="incorrectas">{{ letras_incorrectas|join:", " }}</span></p>
+            {% endif %}
+        </div>
+
+        <div class="resultado">
+            <h2 class="jugador">Jugador: {{ jugador.nombre }}</h2>
+            <p class="puntuacion">Puntuación: {{ puntuacion }}</p>
+            <p class="palabra">Palabra: {{ palabra_oculta }}</p>
+        </div>
+
+        <h2 class="tabla-titulo">Tabla de Puntuaciones</h2>
+        <table class="tabla">
+            <tr>
+                <th>Nombre</th>
+                <th>Puntuación</th>
+            </tr>
+            {% for jugador in puntuaciones %}
+                <tr>
+                    <td>{{ jugador.nombre }}</td>
+                    <td>{{ jugador.puntuacion }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
