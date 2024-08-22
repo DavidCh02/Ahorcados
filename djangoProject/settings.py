@@ -127,17 +127,14 @@ USE_TZ = True
 
 # This setting informs Django of the URI path from which your static files will be served to users
 # Here, they well be accessible at your-domain.onrender.com/static/... or yourcustomdomain.com/static/...
+# Configurar los archivos estáticos
 STATIC_URL = '/static/'
 
-# The Following code for production may break development mode, so we need to check if we're in DEBUG mode
-if not DEBUG:
-    # Tell Django to copy static assets into a path called `staticfiles` (this is specific to Render)
-    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Donde se almacenarán los archivos estáticos después de la recolección
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-    # Turn on the WhiteNoise storage backend which compresses static files for smaller disk use,
-    # and renames the files with unique names for each version of that file for long term caching
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
+# Opcionalmente, puedes habilitar la compresión y almacenamiento en caché de archivos estáticos
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
