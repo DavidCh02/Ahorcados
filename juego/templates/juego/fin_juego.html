@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'juego/styles.css' %}">
+    <title>Juego Terminado</title>
+</head>
+<body>
+    <div class="container">
+        <h2 class="titulo">Juego del Ahorcado - Fin del Juego</h2>
+        <h1 class="jugador">Jugador: <span>{{ jugador.nombre }}</span></h1>
+        <p class="puntuacion">Tu puntuación final: <strong>{{ puntuacion }}</strong></p>
+        <p class="palabra">La palabra era: <strong>{{ palabra_oculta }}</strong></p>
+
+        <h2 class="tabla-titulo">Tabla de Puntuaciones</h2>
+        <table class="tabla">
+            <tr>
+                <th>Nombre</th>
+                <th>Puntuación</th>
+            </tr>
+            {% for jugador in puntuaciones %}
+                <tr>
+                    <td>{{ jugador.nombre }}</td>
+                    <td>{{ jugador.puntuacion }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">No hay puntuaciones disponibles.</td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <form method="post" action="{% url 'inicio' %}" class="form-boton">
+            {% csrf_token %}
+            <button type="submit" class="boton">Iniciar Nuevo Juego</button>
+        </form>
+    </div>
+</body>
+</html>

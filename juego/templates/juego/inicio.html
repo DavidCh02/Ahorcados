@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'juego/styles.css' %}">
+
+    <
+    <title>Juego de Ahorcados</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="titulo">Juego de Ahorcados</h1>
+
+        <div class="inicio">
+            <h2>Bienvenido al Juego del Ahorcado</h2>
+            <form method="post" class="formulario">
+                {% csrf_token %}
+                <label for="nombre">Nombre:</label>
+                <input type="text" id="nombre" name="nombre" required>
+                <button type="submit" class="boton">Empezar Juego</button>
+            </form>
+
+            <a href="{% url 'agregar_palabra' %}" class="boton">Agregar Palabra</a>
+        </div>
+
+        <h2 class="tabla-titulo">Tabla de Puntuaciones</h2>
+        <table class="tabla">
+            <tr>
+                <th>Nombre</th>
+                <th>Puntuación</th>
+            </tr>
+            {% for jugador in puntuaciones %}
+                <tr>
+                    <td>{{ jugador.nombre }}</td>
+                    <td>{{ jugador.puntuacion }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="2">No hay puntuaciones disponibles.</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

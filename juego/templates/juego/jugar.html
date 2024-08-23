@@ -1,0 +1,239 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'juego/styles.css' %}">
+    <title>Juego de Ahorcados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9; /* Color de fondo */
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px; /* Ancho máximo para la página */
+            margin: 0 auto; /* Centra la página */
+            padding: 20px; /* Espaciado interno */
+            background-color: #ffffff; /* Fondo blanco */
+            border-radius: 10px; /* Bordes redondeados */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+        }
+        .titulo {
+            text-align: center;
+            color: #333;
+        }
+        .abecedario {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .letra {
+            padding: 10px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 40px; /* Tamaño de los botones */
+            text-align: center; /* Centra el texto */
+            background-color: #007bff; /* Color de fondo */
+            color: white; /* Color del texto */
+            font-size: 18px; /* Tamaño del texto */
+        }
+        .letra:hover {
+            background-color: #0056b3; /* Color al pasar el mouse */
+            transform: scale(1.05); /* Aumento ligero al pasar el mouse */
+        }
+        .letra.seleccionada {
+            background-color: #ccc; /* Color cuando está seleccionada */
+            pointer-events: none; /* Deshabilita el clic */
+        }
+        .resultado, .tabla-titulo, .tabla {
+            text-align: center; /* Centra el texto */
+            margin: 20px 0; /* Espaciado vertical */
+        }
+        .tabla {
+            width: 100%; /* Hace que la tabla ocupe todo el ancho disponible */
+            border-collapse: collapse; /* Quita los espacios entre celdas */
+        }
+        .tabla th, .tabla td {
+            border: 1px solid #ddd; /* Bordes de las celdas */
+            padding: 8px; /* Espaciado interno de las celdas */
+        }
+        .tabla th {
+            background-color: #007bff; /* Color de fondo de la cabecera */
+            color: white; /* Color del texto de la cabecera */
+        }
+        .tabla td {
+            background-color: #f9f9f9; /* Color de fondo de las celdas */
+        }
+        .ahorcado {
+            text-align: center; /* Centra el canvas */
+        }
+        .pista {
+            font-weight: bold; /* Negrita para la pista */
+            margin: 20px 0; /* Espaciado vertical */
+        }
+        .error {
+            color: red; /* Color de error */
+        }
+        .boton-pista {
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #28a745; /* Color de fondo del botón de pista */
+            color: white; /* Color del texto del botón */
+            font-size: 16px; /* Tamaño del texto del botón */
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .boton-pista:hover {
+            background-color: #218838; /* Color al pasar el mouse */
+            transform: scale(1.05); /* Aumento ligero al pasar el mouse */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="titulo">Juego del Ahorcado</h1>
+        
+        <div class="ahorcado">
+            <canvas id="canvas" width="200" height="200"></canvas>
+        </div>
+
+        <div class="juego">
+            <p>Intentos restantes: <span class="intentos">{{ intentos }}</span></p>
+
+            {% if mensaje_error %}
+                <p class="error">{{ mensaje_error }}</p>
+            {% endif %}
+
+            {% if pista_mostrada %}
+                <p class="pista">Pista: {{ pista }}</p>
+            {% endif %}
+
+            {% if letras_incorrectas %}
+                <p> Letras incorrectas: <span class="incorrectas">{{ letras_incorrectas|join:", " }}</span></p>
+            {% endif %}
+        </div>
+
+        <div class="resultado">
+            <h2 class="jugador">Jugador: {{ jugador.nombre }}</h2>
+            <p class="puntuacion">Puntuación: {{ puntuacion }}</p>
+            <p class="palabra">Palabra: 
+                {% for letra in palabra_oculta %}
+                    <span class="espacio-letra">{{ letra }}</span>
+                {% endfor %}
+            </p>
+        </div>
+
+        <h2>Elige una letra:</h2>
+        <div class="abecedario">
+            {% for letra in "ABCDEFGHIJKLMNOPQRSTUVWXYZ" %}
+                {% if letra not in letras_adivinadas %}
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="letra" value="{{ letra }}">
+                        <button type="submit" class="letra">{{ letra }}</button>
+                    </form>
+                {% else %}
+                    <div class="letra seleccionada">{{ letra }}</div> <!-- Letra ya seleccionada -->
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="usar_pista" value="1">
+            <button type="submit" class="boton-pista">Usar Pista</button>
+        </form>
+
+        <h2 class="tabla-titulo">Tabla de Puntuaciones</h2>
+        <table class="tabla">
+            <tr>
+                <th>Nombre</th>
+                <th>Puntuación</th>
+            </tr>
+            {% for jugador in puntuaciones %}
+                <tr>
+                    <td>{{ jugador.nombre }}</td>
+                    <td>{{ jugador.puntuacion }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Dibuja el ahorcado según el número de intentos restantes
+        function dibujarAhorcado(intentos) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Limpia el canvas
+
+            ctx.lineWidth = 5; // Grosor de las líneas
+            ctx.strokeStyle = 'black'; // Color de las líneas
+
+            // Dibuja el soporte del ahorcado
+            ctx.beginPath();
+            ctx.moveTo(50, 150); // Base
+            ctx.lineTo(150, 150); // Poste horizontal
+            ctx.lineTo(150, 50); // Poste vertical
+            ctx.lineTo(100, 50); // Cruzado
+            ctx.lineTo(100, 100); // Límite
+            ctx.stroke();
+
+            // Dibuja partes del muñeco según los intentos restantes
+            if (intentos < 6) {
+                // Cabeza
+                ctx.beginPath();
+                ctx.arc(100, 40, 10, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            if (intentos < 5) {
+                // Cuerpo
+                ctx.beginPath();
+                ctx.moveTo(100, 50);
+                ctx.lineTo(100, 120);
+                ctx.stroke();
+            }
+            if (intentos < 4) {
+                // Brazo izquierdo
+                ctx.beginPath();
+                ctx.moveTo(100, 70);
+                ctx.lineTo(70, 90);
+                ctx.stroke();
+            }
+            if (intentos < 3) {
+                // Brazo derecho
+                ctx.beginPath();
+                ctx.moveTo(100, 70);
+                ctx.lineTo(130, 90);
+                ctx.stroke();
+            }
+            if (intentos < 2) {
+                // Pierna izquierda
+                ctx.beginPath();
+                ctx.moveTo(100, 120);
+                ctx.lineTo(70, 150);
+                ctx.stroke();
+            }
+            if (intentos < 1) {
+                // Pierna derecha
+                ctx.beginPath();
+                ctx.moveTo(100, 120);
+                ctx.lineTo(130, 150);
+                ctx.stroke();
+            }
+        }
+
+        // Llama a la función para dibujar el muñeco al cargar la página
+        dibujarAhorcado({{ intentos }});
+    </script>
+</body>
+</html>
